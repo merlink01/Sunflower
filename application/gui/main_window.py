@@ -11,8 +11,12 @@ import subprocess
 import glib
 import urllib
 import signal
-import fcntl
-
+import getpass
+import tempfile
+try:
+	import fcntl
+except:
+	pass
 from menus import MenuManager
 from mounts import MountsManager
 from icons import IconManager
@@ -1754,7 +1758,11 @@ class MainWindow(gtk.Window):
 	def run(self):
 		"""Start application"""
 		# check for mutliple instances
-		lock_file = '/tmp/sunflower-{}.lock'.format(os.geteuid())
+		try:
+			lock_file = '/tmp/sunflower-{}.lock'.format(os.geteuid())
+		except:
+			pass
+			#~ lock_file = os.path.join(tempfile.tempdir,'sunflower-{}.lock'.format(getpass.getuser()))
 		multiple_instances = self.options.get('multiple_instances')
 		hide_on_close = self.window_options.section('main').get('hide_on_close')
 
@@ -1770,9 +1778,10 @@ class MainWindow(gtk.Window):
 			else:
 				# check for lockfile
 				try:
-					lock = open(lock_file, 'w')
-					fcntl.lockf(lock, fcntl.LOCK_EX|fcntl.LOCK_NB)
-					lock.write(str(os.getpid()))
+					pass
+					#lock = open(lock_file, 'w')
+					#fcntl.lockf(lock, fcntl.LOCK_EX|fcntl.LOCK_NB)
+					#lock.write(str(os.getpid()))
 				except IOError:
 					print "Another copy of Sunflower is already running"
 					sys.exit()

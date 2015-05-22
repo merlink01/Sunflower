@@ -4,8 +4,8 @@ import gio
 import pango
 import locale
 import time
-import pwd
-import grp
+#~ import pwd
+#~ import grp
 import common
 
 from plugin_base.monitor import MonitorSignals
@@ -319,16 +319,19 @@ class PropertiesWindow(gtk.Window):
 		self._list_group.clear()
 
 		# for local file system fill comboboxes with available user and group names
-		if self._provider.is_local:
-			for i, user in enumerate(pwd.getpwall()):
-				self._list_owner.append((user.pw_name, user.pw_uid))
-				if user.pw_uid == stat.user_id:
-					self._combobox_owner.set_active(i)
+		try:
+			if self._provider.is_local:
+				for i, user in enumerate(pwd.getpwall()):
+					self._list_owner.append((user.pw_name, user.pw_uid))
+					if user.pw_uid == stat.user_id:
+						self._combobox_owner.set_active(i)
 
-			for i, group in enumerate(grp.getgrall()):
-				self._list_group.append((group.gr_name, group.gr_gid))
-				if group.gr_gid == stat.group_id:
-					self._combobox_group.set_active(i)
+				for i, group in enumerate(grp.getgrall()):
+					self._list_group.append((group.gr_name, group.gr_gid))
+					if group.gr_gid == stat.group_id:
+						self._combobox_group.set_active(i)
+		except:
+			pass
 
 		# for remote file systems simply set owner and group
 		else:

@@ -1,0 +1,69 @@
+### Startup Problems ###
+-SVG Icon Load Problem
+Sunflower\application\icons.py 124
+set_icon_from_file gets some cryptical characters that are not in the variable before.
+
+-Lockfile Debug: 
+import fcntl not possible on windows
+Rework:
+Sunflower\application\guimain_window.py 1758
+
+-User_Group Readout:
+Imports pwd and grp not possible on windows
+Rework:
+Sunflower\application\gui\properties_window.py 322
+
+### Runtime Errors ###
+-mkdir not working
+-file copy not working
+(XDG-OPEN ?)
+
+-Special Characters errors:
+C:\Sunflower\application\gui\main_window.py:1856: GtkWarning: Failed to set text from markup due to error parsing markup: Fehler in Zeile 1, Zeichen 18: Ung├╝ltiger UTF-8-kodierter Text im Namen - ┬╗S
+tartmen³┬½ ist nicht g├╝ltig
+  gtk.main()
+C:\Sunflower\application\widgets\breadcrumbs.py:169: PangoWarning: Invalid UTF-8 string passed to pango_layout_set_text()
+  layout.set_text(path)
+C:\Sunflower\application\widgets\breadcrumbs.py:182: PangoWarning: Invalid UTF-8 string passed to pango_layout_set_text()
+  layout.set_text(text_to_draw)
+C:\Sunflower\application\plugins\file_list\file_list.py:2215: PangoWarning: Invalid UTF-8 string passed to pango_layout_set_text()
+  self._item_list.set_cursor(path)
+Load directory error:
+
+-Open Shell Errors:
+Traceback (most recent call last):
+  File "C:\Sunflower\application\plugin_base\item_list.py", line 1320, in _creat
+    self._parent.create_terminal_tab(self._notebook, options)
+  File "C:\Sunflower\application\gui\main_window.py", line 1896, in create_termi
+    result = self.create_tab(notebook, SystemTerminal, options)
+  File "C:\Sunflower\application\gui\main_window.py", line 1864, in create_tab
+    new_tab = plugin_class(self, notebook, options)
+  File "C:\Sunflower\application\plugins\system_terminal\plugin.py", line 31, in
+    shell_command = self._options.get('shell_command', os.environ['SHELL'])
+  File "C:\Python27\lib\os.py", line 425, in __getitem__
+    return self.data[key.upper()]
+KeyError: 'SHELL'
+
+-Change Drive
+C:\Sunflower\application\plugins\file_list\file_list.py:318: GtkWarning: gdk_screen_get_setting: assertion `GDK_IS_SCREEN (screen)' failed
+  int(gtk.Settings().get_property('gtk-font-name').split()[-1])
+C:\Sunflower\application\gui\main_window.py:1856: PangoWarning: Invalid UTF-8 string passed to pango_layout_set_text()
+  gtk.main()
+C:\Sunflower\application\plugins\file_list\file_list.py:2191: PangoWarning: Invalid UTF-8 string passed to pango_layout_set_text()
+  result = dialog.run()
+C:\Sunflower\application\plugins\file_list\file_list.py:2191: GtkWarning: Failed to set text from markup due to error parsing markup: Fehler in Zeile 1, Zeichen 18: Ung├╝ltiger UTF-8-kodierter Text im
+ Namen - ┬╗Startmen³┬½ ist nicht g├╝ltig
+  result = dialog.run()
+(No Such File Dialog)
+
++++Fixed by: filelist.py 2166
+		#change windows: not use / before self.path 
+		if os.name == 'nt' and self.path.startswith('/'):
+			self.path = self.path[1:]
+
+
+### End Errors ###
+Traceback (most recent call last):
+  File "C:\Sunflower\application\gui\main_window.py", line 762, in _destroy
+    lock_file = '/tmp/sunflower-{}.lock'.format(os.geteuid())
+AttributeError: 'module' object has no attribute 'geteuid'

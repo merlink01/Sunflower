@@ -120,10 +120,16 @@ class IconManager:
 			window.set_icon(self._icon_theme.load_icon('sunflower', 256, 0))
 
 		else:
-			base_path = os.path.dirname(os.path.dirname(sys.argv[0]))
-			window.set_icon_from_file(os.path.abspath(os.path.join(
-										base_path,
-										'images',
-										'sunflower.svg'
-									)))
+			try:
+				base_path = os.path.dirname(os.path.dirname(sys.argv[0]))
+				icon_path = os.path.abspath(os.path.join(
+											base_path,
+											'images',
+											'sunflower.svg'
+										)).encode('utf-8')
+				#~ icon_path = os.path.normpath(icon_path)
+				print icon_path
+				window.set_icon_from_file(icon_path)
+			except:
+				pass
 

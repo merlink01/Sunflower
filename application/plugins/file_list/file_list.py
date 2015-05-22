@@ -2163,6 +2163,10 @@ class FileList(ItemList):
 		self._size['total'] = 0L
 		self._size['selected'] = 0
 
+		if os.name == 'nt' and self.path.startswith('/'):
+			self.path = self.path[1:]
+		print self.path
+
 		try:
 			# populate list
 			if not provider.exists(self.path):
